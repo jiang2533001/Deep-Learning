@@ -36,6 +36,8 @@ def normalize_data(matrix):
 
 def train_test_split(matrix, ratio):
     total = len(matrix)
-    train_data = int(ratio * total)
+    split = int(ratio * total)
+    train_set = matrix[0:split, :]
+    test_set = matrix[split:, :]
 
-    return matrix[0:train_data, :], matrix[train_data:, :]
+    return train_set[:, 0:-1], train_set[:,-1], test_set[:, 0:-1], test_set[:, -1]
