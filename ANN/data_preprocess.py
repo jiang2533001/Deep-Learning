@@ -1,13 +1,14 @@
 import pandas as pd
-import numpy as np
+import numpy as npi
 import matplotlib.pyplot as plt
+import sklearn.preprocessing import StandardScaler
 
-def preprocess(filename):
+def read_data(filename, range_1, range_2):
     data_set = pd.read_csv(filename)
-    x = datat_set.iloc[:, 1:13].values
-    print encode_categorical_date(x[:, 1])
-
-
+    needed_set = data_set[:, range_1:range_2].values
+    
+    return needed_set
+    
 def encode_categorical_data(list):
     c_dict = {}
     num = 1
@@ -18,6 +19,15 @@ def encode_categorical_data(list):
             c_dict[x] = num
             num += 1 
         new_list.append(c_dict[x])
-     
-     return new_list
-        
+    
+    return new_list
+    
+
+def normalize_data(matrix):
+    sc = StandardScaler()
+    matrix = sc.fit_transform(matrix)
+
+    return matrix
+
+def train_test_split(matrix):
+
