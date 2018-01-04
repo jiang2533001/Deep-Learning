@@ -7,17 +7,9 @@ class ANN(torch.nn.Module):
         self.linear2 = torch.nn.Linear(H, D_out)
 
     def forward(self, x):
+        m = torch.nn.Sigmoid()
         h_relu = self.linear1(x).clamp(min=0)
         y_pred = self.linear2(h_relu)
+        y_pred = m(y_pred)
+    
         return y_pred
-
-
-
-
-
-
-
-
-
-
-

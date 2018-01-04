@@ -1,3 +1,4 @@
+import numpy
 import torch
 import torch as nn
 from torch.autograd import Variable
@@ -28,14 +29,18 @@ def main():
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
     for t in range(500):
         y_pred = model(x)
-        #print y_pred
 
         loss = criterion(y_pred, y)
-        print(t, loss.data[0])
-
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
+    correct = 0.0
+    for i in range(N):
+        if (float(y_pred.data[i]) + 0.5 > 1 and  y.data[i] == 1) or (float(y_pred.data[i]) - 0.5 <= 0 and  y.data[i] == 0):
+            correct += 1.0
+    
+    print correct/float(N)
 
 if __name__ == '__main__':
     main()
