@@ -1,5 +1,5 @@
 import torch
-import torch as nn
+import torch.nn as nn
 import numpy
 from torch.autograd import Variable
 import data_preprocess as preprocess
@@ -15,7 +15,7 @@ def main():
     test_x = preprocess.normalize_data(test_x)
 
     if not os.path.isfile('ANN.pt'):     
-        process(train_x, train_y)
+        train(train_x, train_y)
 
     train_y_pred = test(train_x)
     check_result(train_y_pred, train_y)
@@ -27,7 +27,7 @@ def main():
     #test_data = preprocess.normalize_data(test_data) 
     #print test(test_data)
 
-def process(data_x, data_y):
+def train(data_x, data_y):
     N, D_in, H, D_out = len(data_x), len(data_x[1,:]), 100, 1
 
     x = Variable(torch.FloatTensor(data_x))

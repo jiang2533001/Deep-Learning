@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as npi
 import matplotlib.pyplot as plt
 from  sklearn.preprocessing import StandardScaler
 
@@ -29,7 +28,7 @@ def encode_categorical_data(data):
     return new_list
     
 def normalize_data(matrix):
-    sc = StandardScaler()
+    sc = StandardScaler()   
     matrix = sc.fit_transform(matrix)
 
     return matrix

@@ -1,9 +1,11 @@
 import torch
+import torch.nn as nn
 
 class ANN(torch.nn.Module):
     def __init__(self, D_in, H, D_out):
         super(ANN, self).__init__()
         self.linear1 = torch.nn.Linear(D_in, H)
+        self.dropout = nn.Dropout(p=0.1)
         self.linear2 = torch.nn.Linear(H, H)
         self.linear3 = torch.nn.Linear(H, D_out)
     
