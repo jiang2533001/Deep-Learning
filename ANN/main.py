@@ -1,9 +1,10 @@
-import numpy
 import torch
 import torch as nn
+import numpy
 from torch.autograd import Variable
 import data_preprocess as preprocess
 from ANN import ANN
+import os.path
 
 def main():
     unneeded = ['RowNumber', 'CustomerId', 'Surname']
@@ -13,13 +14,18 @@ def main():
     train_x = preprocess.normalize_data(train_x)
     test_x = preprocess.normalize_data(test_x)
 
-    process(train_x, train_y)
+    if not os.path.isfile('ANN.pt'):     
+        process(train_x, train_y)
 
     train_y_pred = test(train_x)
     check_result(train_y_pred, train_y)
 
     test_y_pred = test(test_x)
     check_result(test_y_pred, test_y)
+    
+    #test_data =[[600, 1, 1, 40, 3, 60000, 2, 1, 1, 50000]]
+    #test_data = preprocess.normalize_data(test_data) 
+    #print test(test_data)
 
 def process(data_x, data_y):
     N, D_in, H, D_out = len(data_x), len(data_x[1,:]), 100, 1
@@ -43,20 +49,20 @@ def process(data_x, data_y):
     torch.save(model, 'ANN.pt')
 
 def test(data):
-    x = Variable(torch.FloatTensor(data))
+    x = Variable(torch.FloatTensor(data)) 
     model = torch.load('ANN.pt')
     return model(x)
 
 def check_result(y_pred, y):
     correct = 0.0
     total = y.size
+    y_pred = y_pred.data.numpy()
 
     for i in range(total):
-        if (float(y_pred.data[i]) + 0.5 > 1 and  y[i] == 1) or (float(y_pred.data[i]) - 0.5 <= 0 and  y[i] == 0):
+        if (y_pred[i] + 0.5 > 1 and  y[i] == 1) or (y_pred[i] - 0.5 <= 0 and  y[i] == 0):
             correct += 1.0
     
     print correct/float(total)
-
 
 if __name__ == '__main__':
     main()
