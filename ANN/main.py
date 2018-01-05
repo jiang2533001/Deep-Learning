@@ -13,20 +13,25 @@ def main():
     train_x = preprocess.normalize_data(train_x)
     test_x = preprocess.normalize_data(test_x)
 
-    # N is batch size
-    # D_in is input dimension
-    # H is hidden dimension
-    # D_out is output dimension
-    N, D_in, H, D_out = len(train_x), len(train_x[1,:]), 100, 1
+    process(train_x, train_y)
 
-    x = Variable(torch.FloatTensor(train_x))
-    y = Variable(torch.FloatTensor(train_y), requires_grad=False) 
+    train_y_pred = test(train_x)
+    check_result(train_y_pred, train_y)
 
+    test_y_pred = test(test_x)
+    check_result(test_y_pred, test_y)
+
+def process(data_x, data_y):
+    N, D_in, H, D_out = len(data_x), len(data_x[1,:]), 100, 1
+
+    x = Variable(torch.FloatTensor(data_x))
+    y = Variable(torch.FloatTensor(data_y), requires_grad=False) 
 
     model = ANN(D_in, H, D_out)
 
     criterion = torch.nn.MSELoss(size_average=False)
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-4)
+    
     for t in range(500):
         y_pred = model(x)
 
@@ -35,12 +40,23 @@ def main():
         loss.backward()
         optimizer.step()
 
+    torch.save(model, 'ANN.pt')
+
+def test(data):
+    x = Variable(torch.FloatTensor(data))
+    model = torch.load('ANN.pt')
+    return model(x)
+
+def check_result(y_pred, y):
     correct = 0.0
-    for i in range(N):
-        if (float(y_pred.data[i]) + 0.5 > 1 and  y.data[i] == 1) or (float(y_pred.data[i]) - 0.5 <= 0 and  y.data[i] == 0):
+    total = y.size
+
+    for i in range(total):
+        if (float(y_pred.data[i]) + 0.5 > 1 and  y[i] == 1) or (float(y_pred.data[i]) - 0.5 <= 0 and  y[i] == 0):
             correct += 1.0
     
-    print correct/float(N)
+    print correct/float(total)
+
 
 if __name__ == '__main__':
     main()

@@ -4,12 +4,12 @@ class ANN(torch.nn.Module):
     def __init__(self, D_in, H, D_out):
         super(ANN, self).__init__()
         self.linear1 = torch.nn.Linear(D_in, H)
-        self.linear2 = torch.nn.Linear(H, D_out)
-
-    def forward(self, x):
-        m = torch.nn.Sigmoid()
-        h_relu = self.linear1(x).clamp(min=0)
-        y_pred = self.linear2(h_relu)
-        y_pred = m(y_pred)
+        self.linear2 = torch.nn.Linear(H, H)
+        self.linear3 = torch.nn.Linear(H, D_out)
     
+    def forward(self, x):
+        h_relu_1 = self.linear1(x).clamp(min=0)
+        h_relu_2 = self.linear2(h_relu_1).clamp(min=0)
+        y_pred = self.linear3(h_relu_1).sigmoid()
+   
         return y_pred
